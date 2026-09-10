@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     # Пустая строка '' означает главную страницу этого приложения
-    path('', views.hi, name='home'),
+    path('', views.event_list, name='event_list'),
 ]
