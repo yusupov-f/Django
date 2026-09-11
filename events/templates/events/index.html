@@ -71,14 +71,38 @@
           <div class="col-lg-8">
             <h2 class="mb-4">Список событий</h2>
             {% for event in events %}
-              <div class="card mb-3 shadow-sm">
+              <div class="card mb-4 shadow-sm">
+                <!-- ВЫВОД КАРТИНКИ-ПОСТЕРА -->
+                <!-- ВЫВОД КАРТИНКИ-ПОСТЕРА (Компактный и без обрезки) -->
+            {% if event.poster %}
+              <div class="text-center bg-light p-2">
+                <img 
+                  src="{{ event.poster.url }}" 
+                  class="img-fluid rounded" 
+                  alt="{{ event.title }}"
+                  style="max-height: 250px; width: auto; object-fit: contain;"
+                 >
+                </div>
+            {% endif %}
+
+            
+
+            {{event.title}}
+            {{event.summary}}
+
+
+                
                 <div class="card-body">
                   <h3 class="card-title h4">{{ event.title }}</h3>
-                  {% if event.event_date %}
-                    <h6 class="card-subtitle mb-2 text-muted">{{ event.event_date }}</h6>
+                  
+                  {% if event.starts_at %}
+                    <h6 class="card-subtitle mb-2 text-muted">
+                      📅 {{ event.starts_at|date:"d.m.Y H:i" }}
+                    </h6>
                   {% endif %}
+                  
                   {% if event.description %}
-                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text mt-3">{{ event.description }}</p>
                   {% endif %}
                 </div>
               </div>
