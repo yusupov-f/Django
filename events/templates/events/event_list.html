@@ -1,0 +1,59 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Список событий{% endblock %}
+
+{% block content %}
+<header class="bg-primary bg-gradient text-white py-5">
+  <div class="container px-4 text-center my-4">
+    <h1 class="fw-bolder">Афиша мероприятий</h1>
+    <p class="lead">Все актуальные события на одной платформе</p>
+  </div>
+</header>
+
+<section id="events" class="py-5">
+  <div class="container px-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h2 class="mb-4">Список событий</h2>
+        {% for event in events %}
+          <div class="card mb-4 shadow-sm">
+            {% if event.poster %}
+              <div class="text-center bg-light p-2">
+                <a href="{% url 'event_detail' pk=event.pk %}">
+                  <img 
+                    src="{{ event.poster.url }}" 
+                    class="img-fluid rounded" 
+                    alt="{{ event.title }}"
+                    style="max-height: 250px; width: auto; object-fit: contain;"
+                  >
+                </a>
+              </div>
+            {% endif %}
+
+            <div class="card-body">
+              <h3 class="card-title h4">
+                <a href="{% url 'event_detail' pk=event.pk %}" class="text-decoration-none text-dark">
+                  {{ event.title }}
+                </a>
+              </h3>
+              {% if event.starts_at %}
+                <h6 class="card-subtitle mb-2 text-muted">
+                  📅 {{ event.starts_at|date:"d.m.Y H:i" }}
+                </h6>
+              {% endif %}
+              {% if event.description %}
+                <p class="card-text mt-3">{{ event.description|truncatewords:20 }}</p>
+              {% endif %}
+              <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-primary btn-sm mt-2">
+                Подробнее
+              </a>
+            </div>
+          </div>
+        {% empty %}
+          <p class="lead text-muted">Событий пока нет.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

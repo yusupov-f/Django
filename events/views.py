@@ -4,10 +4,11 @@ from .models import Event
 
 def event_list(request):
     events = Event.objects.filter(is_published=True).order_by('-starts_at')
-    return render(request, 'events/index.html', {'events': events})
+    # Используем созданный event_list.html
+    return render(request, 'events/event_list.html', {'events': events})
 
 
 def event_detail(request, pk):
-    # Получаем событие по ID (pk)
     event = get_object_or_404(Event, pk=pk, is_published=True)
+    # Используем детальный шаблон event_detail.html
     return render(request, 'events/event_detail.html', {'event': event})
