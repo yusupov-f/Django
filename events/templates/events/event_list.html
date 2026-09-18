@@ -19,7 +19,8 @@
           <div class="card mb-4 shadow-sm">
             {% if event.poster %}
               <div class="text-center bg-light p-2">
-                <a href="{% url 'event_detail' pk=event.pk %}">
+                <!-- ИЗМЕНЕНО: Добавлен префикс events: -->
+                <a href="{% url 'events:event_detail' pk=event.pk %}">
                   <img 
                     src="{{ event.poster.url }}" 
                     class="img-fluid rounded" 
@@ -32,7 +33,8 @@
 
             <div class="card-body">
               <h3 class="card-title h4">
-                <a href="{% url 'event_detail' pk=event.pk %}" class="text-decoration-none text-dark">
+                <!-- ИЗМЕНЕНО: Добавлен префикс events: -->
+                <a href="{% url 'events:event_detail' pk=event.pk %}" class="text-decoration-none text-dark">
                   {{ event.title }}
                 </a>
               </h3>
@@ -44,7 +46,8 @@
               {% if event.description %}
                 <p class="card-text mt-3">{{ event.description|truncatewords:20 }}</p>
               {% endif %}
-              <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-primary btn-sm mt-2">
+              <!-- ИЗМЕНЕНО: Добавлен префикс events: -->
+              <a href="{% url 'events:event_detail' pk=event.pk %}" class="btn btn-primary btn-sm mt-2">
                 Подробнее
               </a>
             </div>
