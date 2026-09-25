@@ -57,3 +57,16 @@ def event_update(request, pk):
         'events/event_form.html',
         {'form': form, 'action': 'Редактировать событие'},
     )
+
+
+def event_delete(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+
+    if request.method == 'POST':
+        title = event.title
+        event.delete()
+        messages.success(request, f'Событие "{title}" было успешно удалено.')
+        return redirect('events:event_list')
+
+    # Если обратились через GET, перенаправляем на карточку события
+    return redirect('events:event_detail', pk=pk)

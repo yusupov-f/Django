@@ -8,18 +8,32 @@
     <div class="col-lg-8">
       
       <div class="d-flex justify-content-between align-items-center mb-4">
-       
         <a href="{% url 'events:event_list' %}" class="btn btn-outline-secondary">&larr; На главную</a>
-        <!-- Кнопка редактирования -->
-        <a href="{% url 'events:event_update' pk=event.pk %}" class="btn btn-warning">
-           Редактировать
-        </a>
+        
+        <!-- Блок кнопок управления -->
+        <div class="btn-group" role="group">
+          <a href="{% url 'events:event_update' pk=event.pk %}" class="btn btn-warning">
+            ✏️ Редактировать
+          </a>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            🗑️ Удалить
+          </button>
+        </div>
       </div>
 
-      <div class="card shadow-sm">
+      <div class="card shadow-sm overflow-hidden">
         {% if event.poster %}
-          <img src="{{ event.poster.url }}" class="card-img-top" alt="{{ event.title }}">
+          <!-- Блок картинки без обрезки для детальной страницы -->
+          <div class="bg-light d-flex align-items-center justify-content-center border-bottom" style="min-height: 300px; max-height: 500px; width: 100%;">
+            <img 
+              src="{{ event.poster.url }}" 
+              alt="{{ event.title }}" 
+              style="max-height: 500px; max-width: 100%; width: auto; height: auto; object-fit: contain !important;"
+              class="p-2"
+            >
+          </div>
         {% endif %}
+
         <div class="card-body p-4">
           <h1 class="card-title h2 mb-3">{{ event.title }}</h1>
           
@@ -39,6 +53,28 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        Вы уверены, что хотите удалить событие <strong>«{{ event.title }}»</strong>? Это действие нельзя отменить.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <form action="{% url 'events:event_delete' pk=event.pk %}" method="post" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Да, удалить</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
