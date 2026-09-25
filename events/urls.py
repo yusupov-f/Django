@@ -9,4 +9,5 @@ urlpatterns = [
     # ИЗМЕНЕНО: Добавлен маршрут для создания события
     path('create/', views.event_create, name='event_create'),
     path('<int:pk>/', views.event_detail, name='event_detail'),
+    path('<int:pk>/edit/', views.event_update, name='event_update'),
 ]

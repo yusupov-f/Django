@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+
 from .forms import EventForm
 from .models import Event
 
@@ -19,8 +20,40 @@ def event_create(request):
         form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save()
-            return redirect('events:event_list')
-    else:   
+            messages.success(
+                request, f'Событие "{event.title}" успешно создано!'
+            )
+            return redirect('events:event_detail', pk=event.pk)
+    else:
         form = EventForm()
 
-    return render(request, 'events/event_form.html', {'form': form, 'action': 'Создать'})
+    return render(
+        request,
+        'events/event_form.html',
+        {'form': form, 'action': 'Создать событие'},
+    )
+
+
+# НОВАЯ ФУНКЦИЯ: Обновление существующего события
+def event_update(request, pk):
+    # Находим событие по primary key (pk)
+    event = get_object_or_404(Event, pk=pk)
+
+    if request.method == 'POST':
+        # Передаем instance=event, чтобы обновить существующую запись в БД
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            event = form.save()
+            messages.success(
+                request, f'Событие "{event.title}" успешно обновлено!'
+            )
+            return redirect('events:event_detail', pk=event.pk)
+    else:
+        # Загружаем форму с уже заполненными данными события
+        form = EventForm(instance=event)
+
+    return render(
+        request,
+        'events/event_form.html',
+        {'form': form, 'action': 'Редактировать событие'},
+    )
