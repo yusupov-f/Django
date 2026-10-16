@@ -1,4 +1,10 @@
 from django.db import models
+from django.urls import reverse
+
+# Менеджер, который возвращает только НЕ удаленные события
+class ActiveEventManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
 
 
 class Event(models.Model):
@@ -19,6 +25,22 @@ class Event(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    # 1. Добавляем флаг мягкого удаления
+    is_deleted = models.BooleanField(default=False, verbose_name='Удалено (Soft Delete)')
+
+    # 2. Подключаем менеджеры
+    objects = ActiveEventManager()      # Event.objects.all() вернет ТОЛЬКО активные!
+    all_objects = models.Manager()      # Event.all_objects.all() вернет ВСЕ (включая soft-deleted)
 
     def __str__(self):
         return self.title
+
+    # Метод для удобного получения URL карточки
+    def get_absolute_url(self):
+        return reverse('events:event_detail', kwargs={'pk': self.pk})
+
+    # 3. Переопределяем метод удаления
+    def delete(self, using=None, keep_parents=False):
+        self.is_deleted = True
+        self.save()
